@@ -14,6 +14,6 @@ module.exports = {
       });
     },
     down: async (queryInterface) => {
-      await queryInterface.dropTable('Teams');
+      await queryInterface.dropTable('teams');
     },
 };

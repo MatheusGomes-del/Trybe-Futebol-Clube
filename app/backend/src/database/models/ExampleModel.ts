@@ -1,4 +1,4 @@
-import { Model } from 'sequelize';
+/* import { Model } from 'sequelize';
 import db from '.';
 // import OtherModel from './OtherModel';
 
@@ -16,8 +16,7 @@ Example.init({
   timestamps: false,
 });
 
-/**
-  * `Workaround` para aplicar as associations em TS: 
+  * `Workaround` para aplicar as associations em TS:
   * Associations 1:N devem ficar em uma das instâncias de modelo
   * */
 
@@ -27,4 +26,4 @@ Example.init({
 // Example.hasMany(OtherModel, { foreignKey: 'campoC', as: 'campoEstrangeiroC' });
 // Example.hasMany(OtherModel, { foreignKey: 'campoD', as: 'campoEstrangeiroD' });
 
-export default Example;
+// export default Example;

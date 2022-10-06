@@ -9,6 +9,10 @@ module.exports = {
         home_team: {
             allowNull: false,
             type: Sequelize.INTEGER,
+            reference: {
+              model: 'teams',
+              key: 'id'
+            }
         },
         home_team_goals: {
             allowNull: false,
@@ -18,6 +22,10 @@ module.exports = {
         away_team: {
             allowNull: false,
             type: Sequelize.INTEGER,
+            reference: {
+              model:'teams',
+              key: 'id'
+            }
         },
         away_team_goals: {
             allowNull: false,
@@ -26,11 +34,11 @@ module.exports = {
 
         in_progress: {
             allowNull: false,
-            type: Sequelize.INTEGER,
+            type: Sequelize.BOOLEAN,
         }
       });
     },
     down: async (queryInterface) => {
-      await queryInterface.dropTable('Matches');
+      await queryInterface.dropTable('matches');
     },
 };
