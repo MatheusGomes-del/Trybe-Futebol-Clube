@@ -1,9 +1,9 @@
-import { Model, INTEGER, STRING } from 'sequelize/types';
+import { Model, INTEGER, STRING } from 'sequelize';
 import db from '.';
 
 export default class TeamsModel extends Model {
   id!: number;
-  teamName: string;
+  teamName!: string;
 }
 
 TeamsModel.init({
@@ -16,6 +16,7 @@ TeamsModel.init({
   teamName: {
     allowNull: false,
     type: STRING,
+    field: 'team_name',
   },
 }, {
   sequelize: db,

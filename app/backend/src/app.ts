@@ -1,6 +1,8 @@
 import * as express from 'express';
 import login from './middlewares/login';
 import LoginController from './controller/loginController';
+import TeamController from './controller/teamController';
+import matchesController from './controller/matchesController';
 
 class App {
   public app: express.Express;
@@ -14,6 +16,9 @@ class App {
     this.app.get('/', (req, res) => res.json({ ok: true }));
     this.app.post('/login', login.verifyLogin, login.verifyUser, LoginController.login);
     this.app.get('/login/validate', login.validateAuth, LoginController.validate);
+    this.app.get('/teams', TeamController.getAllTeams);
+    this.app.get('/teams/:id', TeamController.getTeamById);
+    this.app.get('/matches', matchesController.getAllMatches);
   }
 
   private config():void {
