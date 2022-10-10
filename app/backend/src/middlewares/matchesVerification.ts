@@ -7,11 +7,19 @@ import { IAuthorization } from '../interface/IAuthorization';
 const verifyMatch = async (req: Request, res: Response, next: NextFunction):
 Promise<Response | undefined> => {
   const { homeTeam, awayTeam } = req.body;
+  const model = MatchesModel;
 
   if (homeTeam === awayTeam) {
     return res.status(401).json(
       { message: 'It is not possible to create a match with two equal teams' },
     );
+  }
+
+  const _homeTeam = await model.findOne({ where: { homeTeam } });
+  const _awayTeam = await model.findOne({ where: { awayTeam } });
+
+  if (!_homeTeam || !_awayTeam) {
+    return res.status(404).json({ message: 'There is no team with such id!' });
   }
 
   next();
@@ -29,20 +37,4 @@ Promise<Response | undefined> => {
   }
 };
 
-const verifyTeams = async (req: Request, res: Response, next: NextFunction):
-Promise<Response | undefined> => {
-  const model = MatchesModel;
-
-  const { homeTeam, awayTeam } = req.body;
-
-  const _homeTeam = await model.findOne({ where: { homeTeam } });
-  const _awayTeam = await model.findOne({ where: { awayTeam } });
-
-  if (!_homeTeam || !_awayTeam) {
-    return res.status(404).json({ message: 'There is no team with such id!' });
-  }
-
-  next();
-};
-
-export { verifyMatch, verifyToken, verifyTeams };
+export { verifyMatch, verifyToken };

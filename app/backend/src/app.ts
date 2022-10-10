@@ -3,17 +3,14 @@ import login from './middlewares/login';
 import LoginController from './controller/loginController';
 import TeamController from './controller/teamController';
 import MatchesController from './controller/matchesController';
-import { verifyMatch, verifyTeams, verifyToken } from './middlewares/matchesVerification';
+import { verifyMatch, verifyToken } from './middlewares/matchesVerification';
 
 class App {
   public app: express.Express;
 
   constructor() {
     this.app = express();
-
     this.config();
-
-    // Não remover essa rota
     this.app.get('/', (req, res) => res.json({ ok: true }));
     this.app.post('/login', login.verifyLogin, login.verifyUser, LoginController.login);
     this.app.get('/login/validate', login.validateAuth, LoginController.validate);
@@ -25,11 +22,11 @@ class App {
       '/matches',
       verifyMatch,
       verifyToken,
-      verifyTeams,
       MatchesController.insertMatches,
     );
     this.app.patch('/matches/:id/finish', MatchesController.changeStatus);
     this.app.patch('/matches/:id', MatchesController.updateMatch);
+    this.app.get('/');
   }
 
   private config():void {
