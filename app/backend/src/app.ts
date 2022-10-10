@@ -2,7 +2,8 @@ import * as express from 'express';
 import login from './middlewares/login';
 import LoginController from './controller/loginController';
 import TeamController from './controller/teamController';
-import matchesController from './controller/matchesController';
+import MatchesController from './controller/matchesController';
+import { verifyMatch, verifyTeams, verifyToken } from './middlewares/matchesVerification';
 
 class App {
   public app: express.Express;
@@ -18,7 +19,17 @@ class App {
     this.app.get('/login/validate', login.validateAuth, LoginController.validate);
     this.app.get('/teams', TeamController.getAllTeams);
     this.app.get('/teams/:id', TeamController.getTeamById);
-    this.app.get('/matches', matchesController.getAllMatches);
+    this.app.get('/matches', MatchesController.getAllMatches);
+    this.app.get('/matches', MatchesController.getMatchesInProgress);
+    this.app.post(
+      '/matches',
+      verifyMatch,
+      verifyToken,
+      verifyTeams,
+      MatchesController.insertMatches,
+    );
+    this.app.patch('/matches/:id/finish', MatchesController.changeStatus);
+    this.app.patch('/matches/:id', MatchesController.updateMatch);
   }
 
   private config():void {
