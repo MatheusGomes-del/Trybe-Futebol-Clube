@@ -9,8 +9,10 @@ import { Response } from 'superagent';
 import IUser from '../interface/User';
 import Users from '../database/models/UserModel';
 import { send } from 'process';
-import { invalidUser, MESSAGE_ERROR_INVALID_USER, MESSAGE_ERROR_LESS_INFORMATION, role, userToken, userWithouEmail, userWithouPassword } from './mocks/login';
+import { invalidUser, MESSAGE_ERROR_INVALID_USER, MESSAGE_ERROR_LESS_INFORMATION, Role, userToken, userWithouEmail, userWithouPassword, validUser, validUserDecoded } from './mocks/login';
 import { response } from 'express';
+import bcryptPasswordValidation from '../helpers/bcrypt';
+import bcryptPass from '../helpers/bcrypt';
 
 chai.use(chaiHttp);
 
@@ -20,25 +22,17 @@ describe('Test /login', () => {
     
     describe('POST /login', () => {
         describe('Test valid user', () => {
-            before(() => sinon.stub(Users, "findOne").resolves({role:'admin'} as Users))
+            beforeEach(() => { sinon.stub(Users, "findOne").resolves(validUserDecoded as Users)
+                               sinon.stub(bcryptPass, 'bcryptPasswordValidation').returns(true)} );
     
-            after(() => {
+            afterEach(() => {
                 (Users.findOne as sinon.SinonStub).restore();
-            })
-            
-    
-            const loginBody = {
-                "email": "admin@admin.com",
-                "password": "secret_admin"
-            }
+                (bcryptPass.bcryptPasswordValidation as sinon.SinonStub).restore();
+            }); 
         
             it('Login must be succefully', async () => {
-                const login = await chai.request(app).post('/login').send({
-                    email: 'admin@admin.com',
-                    password: '$2a$08$xi.Hxk1czAO0nZR..B393u10aED0RQ1N3PAEXQ7HxtLjKPEZBu.PW',
-                  });
+                const login = await chai.request(app).post('/login').send(validUserDecoded);
                   expect(login.status).to.be.equal(200);
-                  expect(login.body).to.be.equal(loginBody);
                   expect(login.body).to.have.property('token');
             });
         });
@@ -56,7 +50,7 @@ describe('Test /login', () => {
         it('Should return error message with status 401', async () => {
            const loginError = await chai.request(app).post('/login').send(invalidUser);
            expect(loginError.status).to.be.equal(401);
-           expect(loginError.body).to.be.equal(MESSAGE_ERROR_INVALID_USER);    
+           expect(loginError.body).to.be.deep.equal(MESSAGE_ERROR_INVALID_USER);    
         }); 
     });
 
@@ -82,7 +76,7 @@ describe('Test /login', () => {
     describe('GET /login/validate', () => {
         describe('Test valdid validate', () => {
             beforeEach(() => {
-                sinon.stub(Users, 'findOne').resolves(role as Users)
+                sinon.stub(Users, 'findOne').resolves(Role as Users);
             });
 
             afterEach(() => {
@@ -92,7 +86,7 @@ describe('Test /login', () => {
             it('Verify if return status 200 with valid user', async () => {
                 const validate = await chai.request(app).get('/login/validate').set('authorization', userToken)
                 expect(validate.status).to.be.equal(200);
-                expect(validate.body).to.be.deep.equal({ role })
+                expect(validate.body).to.be.deep.equal({ role: Role.role});
              });
         });
 
@@ -100,7 +94,7 @@ describe('Test /login', () => {
             it('Test if returns error with status 401', async () => {
                const error = await chai.request(app).get('/login/validate');
 
-               expect(error.body).to.be.deep.equal({ message: 'You need a token to access this route' });
+               expect(error.body).to.be.deep.equal({ message: 'notFoundToken' });
                expect(error.status).to.be.equal(401);
             });
         })

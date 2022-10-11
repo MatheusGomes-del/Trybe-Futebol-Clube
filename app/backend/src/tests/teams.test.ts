@@ -28,7 +28,7 @@ describe('Test /teams', () => {
         it('Test if return all teams with status code 200', async () => {
           const teams = await chai.request(app).get('/teams');
 
-          expect(teams.body).to.be.equal(allTeams);
+          expect(teams.body).to.be.deep.equal(allTeams);
           expect(teams.status).to.be.equals(200);
         });
      });
@@ -46,7 +46,7 @@ describe('Test /teams', () => {
            const team = await chai.request(app).get('/teams/3');
 
            expect(team.status).to.be.equal(200);
-           expect(team.body).to.be.equal(oneTeam);
+           expect(team.body).to.be.deep.equal(oneTeam);
         });
      });
    });

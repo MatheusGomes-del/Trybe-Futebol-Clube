@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import bcryptPasswordValidation from '../helpers/bcrypt';
 import UserModel from '../database/models/UserModel';
 import IUser from '../interface/User';
+import bcryptPass from '../helpers/bcrypt';
 
 const ERROR_INCORRECT_INFOS = 'Incorrect email or password';
 
@@ -23,7 +23,7 @@ Promise<Response | undefined> => {
     return res.status(401).json({ message: ERROR_INCORRECT_INFOS });
   }
 
-  const crypt = bcryptPasswordValidation(password, user.password);
+  const crypt = bcryptPass.bcryptPasswordValidation(password, user.password);
 
   if (!crypt) {
     return res.status(401).json({ message: ERROR_INCORRECT_INFOS });

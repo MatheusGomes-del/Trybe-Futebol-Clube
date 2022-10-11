@@ -38,7 +38,7 @@ const MESSAGE_ERROR_LESS_INFORMATION = {
 const userToken = Jwt.sign({ userEmail: validUserDecoded.email }, JWT_SECRET, { algorithm: 'HS256', expiresIn: '6d' },
 );
 
-const role = {
+const Role = {
     email: 'azazel@hell.com',
     password: 'opentostreet',
     role: 'admin'
@@ -53,6 +53,6 @@ export {
     MESSAGE_ERROR_INVALID_USER, 
     MESSAGE_ERROR_LESS_INFORMATION,
     userToken,
-    role
+    Role
  }
 

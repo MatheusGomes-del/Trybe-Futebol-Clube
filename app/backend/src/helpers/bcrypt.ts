@@ -1,6 +1,9 @@
 import * as bcrypt from 'bcryptjs';
 
-const bcryptPasswordValidation = (password: string, hash: string): boolean =>
-  bcrypt.compareSync(password, hash);
+class bcryptPass {
+  static bcryptPasswordValidation(password: string, hash: string): boolean {
+    return bcrypt.compareSync(password, hash);
+  }
+}
 
-export default bcryptPasswordValidation;
+export default bcryptPass;
