@@ -4,6 +4,7 @@ import LoginController from './controller/loginController';
 import TeamController from './controller/teamController';
 import MatchesController from './controller/matchesController';
 import { verifyMatch, verifyToken } from './middlewares/matchesVerification';
+import LeaderBoardController from './controller/LeaderBoardController';
 
 class App {
   public app: express.Express;
@@ -26,7 +27,7 @@ class App {
     );
     this.app.patch('/matches/:id/finish', MatchesController.changeStatus);
     this.app.patch('/matches/:id', MatchesController.updateMatch);
-    this.app.get('/');
+    this.app.get('/leaderboard/home', LeaderBoardController.getAllLeaderboard);
   }
 
   private config():void {
