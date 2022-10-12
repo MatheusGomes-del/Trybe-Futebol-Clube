@@ -3,7 +3,7 @@ import LeaderBoard from '../service/LeaderboardService';
 
 export default class LeaderBoardController {
   static async getAllLeaderboard(req: Request, res: Response): Promise<Response> {
-    const matches = await LeaderBoard.getAllLeaderboard();
+    const matches = await LeaderBoard.leaderboard();
 
     return res.status(200).json(matches);
   }
